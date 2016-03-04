@@ -1,0 +1,139 @@
+<html>
+   <head>
+       <meta charset="UTF-8"/>
+
+       <meta name="description" content="Koding hackathon 2016 - A HTML5 game tests your Javascript coding ability. Type, Code, Kill zombies then face the ultimate code judging system powered by IBM Bluemix®.">
+       <meta itemprop="name" content="TryTrySee - The Coding of the Dead">
+       <meta itemprop="description" content="Koding hackathon 2016 - A HTML5 game tests your Javascript coding ability. Type, Code, Kill zombies then face the ultimate code judging system powered by IBM Bluemix®.">
+       <meta itemprop="image" content="https://cloud.githubusercontent.com/assets/4080524/13202495/bbe2b4ba-d8d7-11e5-9df3-96a0a3e96740.jpg">
+       <meta property="og:url" content="http://169.44.56.42/trytrysee/index.html">
+       <meta property="og:title" content="TryTrySee - The Coding of the Dead">
+       <meta property="og:description" content="Koding hackathon 2016 - A HTML5 game tests your Javascript coding ability. Type, Code, Kill zombies then face the ultimate code judging system powered by IBM Bluemix®.">
+       <meta property="og:site_name" content="TryTrySee - The Coding of the Dead">
+       <meta property="og:image" content="https://cloud.githubusercontent.com/assets/4080524/13202495/bbe2b4ba-d8d7-11e5-9df3-96a0a3e96740.jpg">
+
+
+       <title>TryTrySee - The Coding of the Dead</title>
+       <link href="style.css" rel="stylesheet">
+       <script src="phaser.min.js"></script>
+       <script src="jquery-2.2.0.min.js"></script>
+       <script src="jsinterpreter/acorn_interpreter.js"></script>
+   </head>
+   <body>
+        <!--requirejs-->
+        <script src="bower_components/requirejs/require.js"></script>
+
+        <script type="text/javascript">
+
+        var playGround = null;
+
+        requirejs.config({
+            baseUrl: "./",
+            paths: {
+                boot: 'js/boot',
+                battle: 'js/battle',
+                boss: 'js/boss',
+                tutorial: 'js/tutorial',
+                lose: 'js/lose',
+                victory: 'js/victory',
+                creature: 'js/creature',
+                Cookies: 'bower_components/js-cookie/src/js.cookie',
+                swal : 'bower_components/bootstrap-sweetalert/lib/sweet-alert.min',
+                ShortQuiz: 'js/ShortQuiz',
+                AceEditor: 'js/aceEditor',
+                ace: 'js/ace-builds/src-noconflict/ace',
+                domReady: "js/domReady/domReady",
+                CodeQuestion: 'js/CodeQuestion',
+                CodeQuestionbase: 'js/CodeQuestionbase',
+            }
+        });
+
+        require( ["boot", "battle", "boss", "tutorial", "creature", "ShortQuiz", "AceEditor", "victory", "lose"],
+            function(boot, battle, boss, tutorial, creature, ShortQuiz, AceEditor, victory, lose) {
+                //This function will be called when all the dependencies
+                //listed above are loaded. Note that this function could
+                //be called before the page is loaded.
+                //This callback is optional.
+
+               //可調參數 start **************************************
+               var gameWidth = 800;
+               var gameHeight = 600;
+               // var gameWidth = Math.floor($(document).width() * 0.7 -5 );
+               // var gameHeight = Math.floor($(document).height() - 5);
+
+               // 可調參數 end ************************************
+
+
+                // phaserCreate the game object itself
+                var game = new Phaser.Game(
+                    gameWidth,    gameHeight,                   // 800 x 600 rebackgroundolution.
+                    Phaser.AUTO,                   // Allow Phaser to determine Canvas or WebGL
+                   "tts"                   // The HTML element ID we will connect Phaser to.
+                );
+
+                game.States = {}; //創建一個對象來存放要用到的state
+
+                //boot場景，用來做一些遊戲啟動前的準備
+                game.States.boot     = function () { return boot.boot(game);}
+                game.States.battle   = function () { return battle.battle(game, $('#question-text'));}
+                game.States.tutorial = function () { return tutorial.tutorial(game);}
+                game.States.victory  = function () { return victory.victory(game, $('#bluemix-img'));}
+                game.States.lose     = function () { return lose.lose(game);}
+                game.States.boss     = function () {
+                    var editor = AceEditor.initAce();
+                    return boss.boss(game, $('#bossAnswer'), editor, $('#question-text'), $('#bossAnswerSubmitButton'));
+                }
+
+                $(document).on("keydown", function (e) {
+                    var state = game.state.getCurrentState();
+                    if (state.handleBackspace) {
+                        state.handleBackspace(e);
+                    }
+                });
+
+
+
+                //把定義好的場景添加到遊戲中
+                game.state.add('boot', game.States.boot());
+                game.state.add('battle', game.States.battle());
+                game.state.add('boss', game.States.boss());
+                game.state.add('tutorial', game.States.tutorial());
+                game.state.add('victory', game.States.victory());
+                game.state.add('lose', game.States.lose());
+                game.state.start('boot');
+
+
+            }
+        );
+       </script>
+
+       <div class="container">
+         <div class="gameview">
+           <div id="bluemix-img" class="bluemix-img"  style="display:none;" >
+             <a href="https://console.ng.bluemix.net/" target="_blank"> 
+               <img src="assets/bluemix-logo.png" alt="IBM Bluemix" height="244" width="244">
+             </a>
+           </div>
+           <div id="bossAnswer" class="boss" style="display:none; opacity:0.8">
+<pre id="editor" class="boss-text">
+// write your code here
+</pre>
+
+           </div>
+           <div id="tts"></div>
+         </div>
+         <div class="question-block" id="question-block">
+           <!-- 題目這邊-->
+           <div class="question-text" id="question-text">
+           </div>
+           <input id="bossAnswerSubmitButton" style="display:none;" type="submit" value="RUN" class="boss-button">
+         </div>
+       </div>
+
+       <script lang="javascript">
+
+
+
+       </script>
+   </body>
+</html>

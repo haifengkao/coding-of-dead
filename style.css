@@ -1,0 +1,71 @@
+body {
+    overflow-y: hidden;
+
+    background-color: #000;
+}
+
+.container {
+    position: relative;
+
+    width: 1100px;
+    height: 600px;
+    padding-top: 50px;
+    margin: 0 auto;
+}
+
+.gameview {
+    display: block;
+    float: left;
+}
+
+.question-block {
+    display: block;
+    float: left;
+    width: 300px;
+    height: 600px;
+    padding: 30px 10px;
+    box-sizing: border-box;
+
+    background-color: #222;
+}
+
+.question-text {
+    font-size: 20px;
+
+    text-align: left;
+
+    color: #fff;
+}
+
+.boss {
+    position: absolute;
+    bottom: 0;
+
+    width: 800px;
+    height: 145px;
+    box-sizing: border-box;
+}
+
+.boss-text {
+    width: 100%;
+    height: 130px;
+}
+
+.boss-button {
+    position: absolute;
+    right: 50px;
+    bottom: 10px;
+
+    width: 200px;
+
+    font-size: 20px;
+}
+
+.bluemix-img {
+    position: absolute;
+    top: 230px;
+    left: 250px;
+
+    width: 100%;
+    height: 250px;
+}
